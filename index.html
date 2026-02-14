@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Floating hearts background */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: float 6s infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Flying heart */
+        .airplane-container {
+            position: fixed;
+            top: 20%;
+            left: -100px;
+            z-index: 10;
+            animation: fly 3s ease-in-out forwards;
+            cursor: pointer;
+        }
+
+        @keyframes fly {
+            0% {
+                left: -100px;
+                top: 20%;
+            }
+            50% {
+                left: 50%;
+                top: 40%;
+            }
+            100% {
+                left: 50%;
+                top: 50%;
+                transform: translateX(-50%) translateY(-50%);
+            }
+        }
+
+        .airplane {
+            font-size: 80px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            animation: float-heart 2s ease-in-out infinite;
+        }
+
+        @keyframes float-heart {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.05);
+            }
+        }
+
+        .airplane.explode {
+            animation: explode-heart 0.5s forwards;
+        }
+
+        @keyframes explode-heart {
+            to {
+                opacity: 0;
+                transform: scale(3);
+            }
+        }
+
+        /* Letter envelope */
+        .letter-container {
+            position: relative;
+            z-index: 5;
+            opacity: 0;
+            animation: appear 1s 3.5s forwards;
+        }
+
+        @keyframes appear {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .envelope {
+            width: 300px;
+            height: 200px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .envelope.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #ff6b9d;
+            transform-origin: top center;
+            transition: transform 0.6s;
+            z-index: 3;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .heart-seal {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            z-index: 4;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+
+        /* Heart explosion particles */
+        .heart-particle {
+            position: fixed;
+            font-size: 30px;
+            pointer-events: none;
+            z-index: 20;
+            animation: particle-explode 1.5s ease-out forwards;
+        }
+
+        @keyframes particle-explode {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0.5);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(1) rotate(720deg);
+            }
+        }
+
+        /* Letter content */
+        .letter-content {
+            position: fixed;
+            width: 800px;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: #fff;
+            border-radius: 15px;
+            padding: 50px 60px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow-y: auto;
+            z-index: 100;
+            opacity: 0;
+        }
+
+        .letter-content.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .letter-content h1 {
+            color: #ff6b9d;
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .letter-content p {
+            color: #333;
+            line-height: 1.9;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .signature {
+            text-align: right;
+            font-style: italic;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        /* Custom scrollbar */
+        .letter-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .letter-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .letter-content::-webkit-scrollbar-thumb {
+            background: #ff6b9d;
+            border-radius: 10px;
+        }
+
+        .letter-content::-webkit-scrollbar-thumb:hover {
+            background: #ff4d88;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts background -->
+    <div class="heart-bg" id="heartBg"></div>
+
+    <!-- Flying heart -->
+    <div class="airplane-container" id="flyingHeart" onclick="explodeHeart()">
+        <div class="airplane">❤️</div>
+    </div>
+
+    <!-- Letter -->
+    <div class="letter-container">
+        <div class="envelope" id="envelope">
+            <div class="envelope-flap"></div>
+            <div class="heart-seal">💕</div>
+        </div>
+    </div>
+
+    <!-- Letter content (separate from envelope) -->
+    <div class="letter-content" id="letterContent">
+        <h1>Happy Valentine's Day, bangaram!</h1>
+        <p>I honestly thought it would be a while before I said this to someone I care for again. So thank the universe, or maybe Harshit, for making me fall for such a beautiful and caring woman. I don't know if you remember, but in October we used to talk about what we are looking for in the other person physically and mentally. Both of us wanted someone with more personality. You wanted someone tall, and I wanted someone short (haha, I just wanted to call you short). But I was thinking to myself that it kinda felt like we were describing each other. Maybe it was just me, but I didn't want to pursue what was good over a thought. And look at us now sending reels of being in each other's arms, cute date ideas, what we want to do together and I don't regret it one bit.</p>
+        
+        <p>This is where I lack my literary skills, as I didn't know how to transition from paragraph to paragraph But</p>
+        
+        <p>Time has become such a bizarre and complicated thing to me. It's only been a month since I came here, but when I'm missing you, time moves painfully slow. It feels like it's already been four months, and I can't wait to see you. And then when I'm talking to you, hours pass in what feels like minutes, where it feels like I just started talking to you. I went from being someone who barely checked his phone to someone who is constantly looking at it and giggling like an absolute fool.</p>
+        
+        <p>I LOVE listening to you. I love knowing how your day went, and I like telling you how mine was. I absolutely adore how you have inputs on the most random things like not liking belts/sunglasses?, vegetables being the same size (had to come back and add this)??, being scared of enclosed water bodies (weirdo)???. To loving the most random, quirkiest things, who likes coconut and chocolate? Eating sugar first and savory? (You are just crazy).</p>
+        
+        <p>You've brought back a smile I didn't even realize I had lost and filled a hollow spot in my heart. I really appreciate how you think me being a simp is adorable. I wake up in the morning, and my first thought is to check my phone for your messages on what my girl is up to. The last thought before I sleep is always me saying goodnight to you, and I cannot function without thinking about you in my day.</p>
+        
+        <p>I know distance can be hard. But when I think about your pretty smile and those dreamy eyes, all I can feel is that it will all be worth it.</p>
+        
+        <p>Pray that I get an internship and also get to come back :).</p>
+        
+        <p>And again, Happy Valentine's Day, my little cutie bujji bangaram.</p>
+        
+        <p>Here's to many more together.</p>
+        
+        <p>I hope you like the cake and the sushi</p>
+        
+        <div class="signature">Sincerely, Yours 💕</div>
+    </div>
+
+    <script>
+        let heartClicked = false;
+
+        // Create floating hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            document.getElementById('heartBg').appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 10000);
+        }
+
+        // Generate hearts periodically
+        setInterval(createHeart, 800);
+        
+        // Create initial hearts
+        for(let i = 0; i < 10; i++) {
+            setTimeout(createHeart, i * 300);
+        }
+
+        // Heart explosion function
+        function explodeHeart() {
+            if (heartClicked) return;
+            heartClicked = true;
+
+            const flyingHeart = document.getElementById('flyingHeart');
+            const heartRect = flyingHeart.getBoundingClientRect();
+            const centerX = heartRect.left + heartRect.width / 2;
+            const centerY = heartRect.top + heartRect.height / 2;
+
+            // Add explode class to main heart
+            flyingHeart.querySelector('.airplane').classList.add('explode');
+
+            // Create explosion particles
+            const particleCount = 500;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'heart-particle';
+                particle.innerHTML = '💕';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+
+                // Random direction and distance
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const distance = 200 + Math.random() * 200;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+
+                document.body.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 1500);
+            }
+
+            // Hide flying heart and envelope, show letter
+            setTimeout(() => {
+                flyingHeart.style.display = 'none';
+                document.getElementById('envelope').classList.add('hidden');
+                document.getElementById('letterContent').classList.add('show');
+            }, 500);
+        }
+
+        // Auto-explode after animation if not clicked
+        setTimeout(() => {
+            if (!heartClicked) {
+                explodeHeart();
+            }
+        }, 4000);
+
+        // Remove the old openLetter function as it's no longer needed
+    </script>
+</body>
+</html>
